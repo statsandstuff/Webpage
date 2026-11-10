@@ -1,0 +1,69 @@
+
+/* Overall page appearance */
+body {
+  background-color: #ffffff;
+  color: #303943;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+/* Main content width and spacing */
+#quarto-content {
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Main headings */
+h1, h2, h3, h4 {
+  color: #183653;
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+}
+
+h1 {
+  border-bottom: 2px solid #d8e2ec;
+  padding-bottom: 12px;
+  margin-bottom: 25px;
+}
+
+h2 {
+  margin-top: 35px;
+  border-bottom: 1px solid #e3e9ef;
+  padding-bottom: 7px;
+}
+
+/* Links */
+a {
+  color: #28658a;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #183653;
+  text-decoration: underline;
+}
+
+/* Mathematics */
+.math {
+  color: #26394d;
+}
+
+/* Code blocks */
+pre {
+  border: 1px solid #dce3e9;
+  border-radius: 5px;
+}
+
+/* Navigation bar */
+.navbar {
+  font-family: Arial, sans-serif;
+  font-weight: 500;
+}
+
+/* Footer */
+.nav-footer {
+  border-top: 1px solid #d8e2ec;
+  color: #687786;
+  font-size: 14px;
+}
