@@ -1,0 +1,24 @@
+---
+title: "Welcome"
+format: html
+editor: visual
+html:
+    code-fold: true
+    code-tools: false
+execute:
+  warning: false
+  message: false
+---
+
+Hi,
+
+Welcome to my webpage, Statistics And Stuff, where I try to post interesting things about statistics and other stuff. Many of these topics are considered to be rather rudimentary while others are a touch more sophisticated. Typically, I like to write about things that either confused me in the past, confuse me in the present, or some combination of the two.
+
+You can get in touch at statsandstuff (at) protonmail (dot) com.
+
+## Statistical Topics
+
+Here are some links to some statistical topics that you can read more about on this webpage.
+
+-   [The Central Limit Theorem](CLT.html)
+-   [Leverage and Outliers](Leverage and Outliers.html)

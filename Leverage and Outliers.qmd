@@ -1,0 +1,195 @@
+---
+title: "Leverage and Outliers"
+format: html
+editor: visual
+html:
+    code-fold: true
+    code-tools: false
+execute:
+  warning: false
+  echo: false
+  message: false
+---
+
+```{r}
+library(tidyverse)
+```
+
+## What is an Outlier?
+
+An *outlier* is a data point that is "substantially different" from the rest of the data. This definition may leave some questions unanswered, like what counts as "substantially different" as opposed to "insubstantially different", but it serves as a useful heuristic for thinking about outliers. Outliers are sometimes thought of as the unfortunate outcomes of random chance, skewing the data in an unlikely direction towards the extremes of some underlying stochastic data generating process. Sometimes outliers are the result of *measurement errors* and ought to be removed from the data set to obtain more accurate and robust results. Other times perceived outliers in the data are actually indicative of interesting phenomena at play, such as \*heavy-tailed population distributions\*. This is all to say that the way we think about outliers, how they are classified, and ultimately, how they are treated, all contains some nuance.
+
+#### A Heuristic Look in 1 and 2 Dimensions
+
+If we accept the heuristic that we initially proposed --- that outliers are data points that are "substantially different" from the rest of the data --- then we can investigate what this heuristic looks like in the simplest case of one dimension.
+
+```{r}
+data.1d <- c(1, 1.3, 1.2, 1.5, 1.4, 1.2, 0.8, 0.4, 0.6, 3.2, 1.6, 1.7, 0.8,
+             0.85, 0.69, 0.86, 0.77, 1.11, 1.24, 1.32, 1.65, 1.94, 0.95, 0.98)
+
+plot.1 <- ggplot(data.frame(data.1d), aes(x=data.1d, y=0)) +
+                  geom_point(size = 3,
+                             aes(colour = data.1d == 3.2)) +
+                  scale_x_continuous(breaks = 0:4, limits = c(0, 4)) +
+                  theme_minimal() +
+                  scale_colour_manual(
+                    values = c("FALSE" = "black", "TRUE" = "red"),
+                    guide = "none"
+                  ) +
+                  theme(
+                    axis.title = element_blank(),
+                    axis.text.y = element_blank(),
+                    axis.ticks.y = element_blank(),
+                    plot.title = element_text(
+                                               size = 16,
+                                               face = "bold",
+                                               hjust = 0.5
+                                              )
+                  ) +
+                  labs(
+                    title = "1 Dimensional Data"
+                  )
+plot.1
+```
+
+In one dimension it is fairly obvious which of our data points would be considered an outlier by our current heuristic. In two dimensions it becomes a little bit trickier, but the task is still far from insurmountable.
+
+```{r}
+set.seed(99)
+x <- c(1, 1.3, 1.2, 1.5, 1.4, 1.2, 0.8, 0.4, 0.6, 3.2, 1.6, 1.7, 0.8,
+             0.85, 0.69, 0.86, 0.77, 1.11, 1.24, 1.32, 1.65, 1.94, 0.95, 0.98)
+
+y <- (x+1)*1.8
+error <- rnorm(length(y), 0, 1)
+y <- y + error
+
+data.2d <- data.frame(x,y)
+
+plot.2 <- ggplot(data.2d, aes(x, y)) +
+                  geom_point(size = 3,
+                             aes(colour = ifelse(
+                                            x == 3.2, "red",
+                                            ifelse(x %in% c(1.94, 1.65, 1.7), "blue", "black") ))
+                             ) +
+                  scale_x_continuous(breaks = 0:4, limits = c(0, 4)) +
+                  theme_minimal() +
+                  scale_colour_identity() +
+                  theme(
+                    axis.title = element_blank(),
+                    plot.title = element_text(
+                                               size = 16,
+                                               face = "bold",
+                                               hjust = 0.5
+                                              )
+                  ) +
+                  labs(
+                    title = "2 Dimensional Data"
+                  )
+plot.2
+```
+
+Now we can still see our original outlier in red, but what about the two points in blue? Are they "substantially different" enough to be considered outliers, also?
+
+You can imagine that as we move to increasingly higher dimensions (three, four, five, ... a thousand, ..., a million?) this becomes increasingly difficult to "eyeball" with our handy heuristic. There are a plethora of well-defined definitions and classification rules that have been developed over the years with the intent of bringing clarity and precision to the identification of outliers. We will now turn our attention to the concept of "leverage" and how outliers manifest themselves in OLS regression.
+
+## Leverage
+
+In regression analysis each observation might have tends, hundreds, thousands, or more dimensions (where each *regressor*/*independent variable* provides a new dimension). The *leverage* of a particular observation (data point) is a measure of how far the independent variable values are from the other observations. Since regression analysis is an exercise in curve fitting, points with high leverage are more likely to drag the fitted curve towards it, thus having significant influence on the parameters being estimated.
+
+```{r}
+plot.3 <- ggplot(data.2d, aes(x, y)) +
+
+  # Scatterplot
+  geom_point(
+    size = 3,
+    aes(colour = ifelse(x == 3.2, "red", "black"))
+  ) +
+
+  # OLS excluding red point
+  geom_smooth(
+    data = subset(data.2d, x != 3.2),
+    aes(x = x, y = y),
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    colour = "blue",
+    linetype = "dashed",
+    linewidth = 1
+  ) +
+
+  # OLS including red point
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    colour = "red",
+    linetype = "dashed",
+    linewidth = 1
+  ) +
+
+  scale_x_continuous(breaks = 0:4, limits = c(0, 4)) +
+  theme_minimal() +
+  scale_colour_identity() +
+
+  theme(
+    axis.title = element_blank(),
+    plot.title = element_text(
+      size = 16,
+      face = "bold",
+      hjust = 0.5
+    )
+  ) +
+
+  labs(title = "OLS Curve With and Without the Red Outlier")
+
+plot.3
+```
+
+In our two dimensional data we can see that the choice of whether or not to include the red outlier point matters for parameter estimation. In the regression of $$
+Y_i + \beta_0 + \beta_1 X_i+ \epsilon_i
+$$ the fitted value for $\hat{\beta}_1$ under OLS (the slope of the cure) differs visibly whether the outlier is included (red dashed curve) or excluded (blue dashed curve).
+
+So, how can we quantify just how much "pull" or *leverage* a single point has in a regression? How about when there are more than just a handful of dimensions?
+
+#### Leverage: Mathematical Definition
+
+Let $X$ be a design matrix with dimensions $n \times p$, that is, we have $n$ observations with $p$ regressors. Let $y$ be a vector of response variables with dimensions $n \times 1$. Let $\epsilon$ be a vector of econometric disturbance terms with dimensions $n \times 1$ where each element is distributed i.i.d. $N(0,\sigma^2)$ for some finite value of $\sigma^2$. Hence we have the usual structural equation $$
+y = X\beta + \epsilon
+$$ where $\beta$ is a vector of parameters with dimensions $p \times 1$.
+
+We know that the OLS estimator $\hat{\beta}^\text{OLS}$ is given by $(X^TX)^{-1}X^Ty$ and that $\hat{y} = X\hat{\beta}^\text{OLS}$. The *leverage* of observation $i$ is defined as $$
+h_{ii} = \frac{\partial \hat{y}_i}{\partial y_i}.
+$$
+
+If we rewrite $\hat{y}$ in terms of the *projection matrix* of $X$, defined as $$
+H = X(X^TX)^{-1}X^T
+$$ then we can see that $$
+\hat{y} = Hy \iff \hat{y}_i = [H]_{ii} y_i
+$$ where $$
+[H]_{ii} = x^T_i(X^TX)^{-1}x_i
+$$ is the $i-th$ diagonal element of the projection matrix, $H$. Hence $$
+\begin{align*}
+h_{ii} &= \frac{\partial \hat{y}_i}{\partial y_i} \\
+    &= \frac{\partial}{\partial y_i} \left(H_i y_i\right) \\
+    &= [H]_{ii}
+\end{align*}
+$$
+
+#### Leverage: Using Leverage to Determine Outliers
+
+Once the leverage of each observation is calculated they can be compared to determine which observations are considered outliers in the regression analysis context. As to be expected there are several similar-yet-different rules-of-thumb but a commonly used one is to classify an observation as an outlier if $$
+h_{ii} > 2 \frac{p}{n}
+$$ where $p$ is the number of parameters/regressors in the model, and $n$ is the number of observations. This threshold rule can be equivalently formulated as two times the average leverage, that is $$
+h_{ii} > 2 \bar{h}
+$$ where $\bar{h} = \frac{1}{n} \sum_{i=1}^n h_{ii}$, since $\bar{h} = p$.
+
+**Proof**: $$
+\begin{align*}
+  \bar{h} &= \frac{1}{n} \sum_{i=1}^n h_{ii} \\
+          &= \frac{1}{n} Tr(H) &&\quad \text{since by definition } Tr(H) = \sum_{i=1}^n h_{ii}\\
+          &= \frac{1}{n} Tr(X(X^TX)^{-1}X^T) &&\quad \text{using the definition of } H\\
+          &= \frac{1}{n} Tr((X^TX)^{-1}X^TX) &&\quad \text{by the cyclic property of } Tr\\
+          &= \frac{1}{n} Tr(I_p) &&\quad \text{since } dim(X) = n \times p \implies dim(X^TX) = p \times p \,\, \& \,\, A^{-1}A = I\\
+          &= \frac{1}{n} p &&\quad \text{since } Tr(I_p) = \sum_{i=1}^p 1.
+\end{align*}
+$$
