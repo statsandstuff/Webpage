@@ -1,0 +1,25 @@
+
+project:
+  type: website
+
+website:
+  title: "Statistics and Stuff"
+  description: "Notes and resources in statistics, statistical modelling, and other fun stuff."
+  navbar:
+    background: "#183653"
+    foreground: "#ffffff"
+    left:
+      - href: index.qmd
+        text: Home
+
+  page-footer:
+    center: "Statistics and Stuff"
+
+format:
+  html:
+    theme: flatly
+    css: styles.css
+    toc: true
+    toc-location: right
+    number-sections: false
+    smooth-scroll: true
