@@ -167,7 +167,7 @@ window.Quarto = {
 
 <section id="what-is-an-outlier" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-an-outlier">What is an Outlier?</h2>
-<p>An <em>outlier</em> is a data point that is “substantially different” from the rest of the data. This definition may leave some questions unanswered, like what counts as “substanially different” as oppossed to “insubstantially different”, but it serves as a useful heuristic for thinking about outliers. Outliers are sometimes thought of as the unfortunate outcomes of random chance, skewing the data in an unlikely direction towards the extremes of some underlying stochastic data generating process. Sometimes outliers are the result of *measurement errors* and ought to be removed from the dataset to obtain more accurate and robust results. Other times perceived outliers in the data are actually indicative of interesting phenomena at play, such as** heaqvy-tailed population distributions**. This is all to say that the way we think about outliers, how they are classified, and ultaimtely, how they are treated, all contians some nuance.</p>
+<p>An <em>outlier</em> is a data point that is “substantially different” from the rest of the data. This definition may leave some questions unanswered, like what counts as “substantially different” as opposed to “insubstantially different”, but it serves as a useful heuristic for thinking about outliers. Outliers are sometimes thought of as the unfortunate outcomes of random chance, skewing the data in an unlikely direction towards the extremes of some underlying stochastic data generating process. Sometimes outliers are the result of <em>measurement errors</em> and ought to be removed from the data set to obtain more accurate and robust results. Other times perceived outliers in the data are actually indicative of interesting phenomena at play, such as <em>heavy-tailed population distributions</em>. This is all to say that the way we think about outliers, how they are classified, and ultimately, how they are treated, all contains some nuance.</p>
 <section id="a-heuristic-look-in-1-and-2-dimensions" class="level4">
 <h4 class="anchored" data-anchor-id="a-heuristic-look-in-1-and-2-dimensions">A Heuristic Look in 1 and 2 Dimensions</h4>
 <p>If we accept the heuristic that we initially proposed — that outliers are data points that are “substantially different” from the rest of the data — then we can investigate what this heuristic looks like in the simplest case of one dimension.</p>
@@ -180,7 +180,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>In one dimension it is fairly obvious which of our data points would be considered an outlier by our current heuristic. In two dimensions it becomes a little bit tricker, but the task is still far from insurmountable.</p>
+<p>In one dimension it is fairly obvious which of our data points would be considered an outlier by our current heuristic. In two dimensions it becomes a little bit trickier, but the task is still far from insurmountable.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -196,7 +196,7 @@ window.Quarto = {
 </section>
 <section id="leverage" class="level2">
 <h2 class="anchored" data-anchor-id="leverage">Leverage</h2>
-<p>In regression analysis each observation might have tends, hundreds, thousands, or more dimensions (where each <em>regressor</em>/<em>independent variable</em> provides a new dimension). The <em>leverage</em> of a particular observation (data point) is a measure of how far the independent variable values are from the other observations. Since regression analysis is an exercise in curve fitting, points with high leverage are more likely to drag the fitted curve towards it, thus having significant influence on the parameters beign estimated.</p>
+<p>In regression analysis each observation might have tends, hundreds, thousands, or more dimensions (where each <em>regressor</em>/<em>independent variable</em> provides a new dimension). The <em>leverage</em> of a particular observation (data point) is a measure of how far the independent variable values are from the other observations. Since regression analysis is an exercise in curve fitting, points with high leverage are more likely to drag the fitted curve towards it, thus having significant influence on the parameters being estimated.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -209,7 +209,7 @@ window.Quarto = {
 <p>In our two dimensional data we can see that the choice of whether or not to include the red outlier point matters for parameter estimation. In the regression of <span class="math display">\[
 Y_i + \beta_0 + \beta_1 X_i+ \epsilon_i
 \]</span> the fitted value for <span class="math inline">\(\hat{\beta}_1\)</span> under OLS (the slope of the cure) differs visibly whether the outlier is included (red dashed curve) or excluded (blue dashed curve).</p>
-<p>So, how can we quantify just how much “pull” or <em>leverage</em> a singel point has in a regression? How about when there are more than just a handful of dimensions?</p>
+<p>So, how can we quantify just how much “pull” or <em>leverage</em> a single point has in a regression? How about when there are more than just a handful of dimensions?</p>
 <section id="leverage-mathematical-definition" class="level4">
 <h4 class="anchored" data-anchor-id="leverage-mathematical-definition">Leverage: Mathematical Definition</h4>
 <p>Let <span class="math inline">\(X\)</span> be a design matrix with dimensions <span class="math inline">\(n \times p\)</span>, that is, we have <span class="math inline">\(n\)</span> observations with <span class="math inline">\(p\)</span> regressors. Let <span class="math inline">\(y\)</span> be a vector of response variables with dimensions <span class="math inline">\(n \times 1\)</span>. Let <span class="math inline">\(\epsilon\)</span> be a vector of econometric disturbance terms with dimensions <span class="math inline">\(n \times 1\)</span> where each element is distributed i.i.d. <span class="math inline">\(N(0,\sigma^2)\)</span> for some finite value of <span class="math inline">\(\sigma^2\)</span>. Hence we have the usual structural equation <span class="math display">\[
