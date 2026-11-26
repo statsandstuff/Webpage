@@ -219,7 +219,7 @@ window.Quarto = {
 <p>So, for our “threshold” of <span class="math inline">\(N\)</span> there may still be times where the deviation between the sample mean and the population mean actually does exceed our margin, <span class="math inline">\(\epsilon\)</span>, however we can be sure that by picking a larger value of the “threshold” <span class="math inline">\(N\)</span> we can make the probability of this happening arbitrarily close to <span class="math inline">\(0\)</span>.</p>
 <p>Recall that <em>convergence almost surely</em> states that</p>
 <p><span class="math display">\[
-\operatorname{Pr}\left(\operatorname{lim}_{n \rightarrow \infty} |\bar{X}_n - \mu\right| = 0) = 1.
+\operatorname{Pr}\left(\operatorname{lim}_{n \rightarrow \infty} |\bar{X}_n - \mu| = 0\right) = 1.
 \]</span></p>
 <p>This claim is stricter. Convergence almost surely tells us about the probability of the sample mean being equal to the population mean in the limit. Note the subtlety between the two; convergence in probability was about the limiting behaviour of the probability of a deviation, while convergence almost surely is about the probability of deviations converging to zero in the limit.</p>
 <p>It says that, for any arbitrarily small margin, <span class="math inline">\(\epsilon\)</span>, there exists a (potentially different) value <span class="math inline">\(N\)</span> such that whenever <span class="math inline">\(n \geq N\)</span> any deviations between the sample mean and the population mean are within this margin, epsilon, with probability <span class="math inline">\(1\)</span>. Mathematically, this exact statement is written as,</p>
